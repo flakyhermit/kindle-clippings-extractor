@@ -18,6 +18,7 @@ class Db:
         clip_id INTEGER PRIMARY KEY,
         location INTEGER,
         page INTEGER,
+        type TEXT,
         timestamp INTEGER,
         highlight TEXT,
         note TEXT,
