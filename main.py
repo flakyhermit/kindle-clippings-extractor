@@ -31,6 +31,7 @@ def parse(text):
                 "(?P<year>\d{4}) (?P<hr>\d\d):(?P<min>\d\d):(?P<sec>\d\d)\n\n" \
                 "(?P<highlight>[\S ]+)\n==========", re.MULTILINE)
     results = p.finditer(text)
+    clips = []
     for result in results:
         clip = {}
         # getting position data
@@ -61,7 +62,7 @@ def parse(text):
         clip['page'] = page
         clip['location'] = loc
         clips.append(clip)
-        return clips
+    return clips
 
 def db_update(clips):
     db = Db(DBPATH)
