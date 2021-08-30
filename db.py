@@ -21,6 +21,7 @@ class Db:
             REFERENCES books (book_id),
         location INTEGER,
         page INTEGER,
+        timestamp INTEGER,
         highlight TEXT,
         note TEXT);""")
         self.conn.commit()
