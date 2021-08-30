@@ -17,6 +17,10 @@ class Db:
         self.cur.execute("""CREATE TABLE IF NOT EXISTS clippings (
         clip_id INTEGER PRIMARY KEY,
         book_id INTEGER,
+        FOREIGN KEY (book_id)
+            REFERENCES books (book_id),
+        location INTEGER,
+        page INTEGER,
         highlight TEXT,
         note TEXT);""")
         self.conn.commit()
