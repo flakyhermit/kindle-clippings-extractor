@@ -35,12 +35,12 @@ def parse(text):
         clip = {}
         # getting position data
         # TODO: A possible alternative to 'None'
-        if result.group('postype') == 'location':
-            loc = [result.group('posx'), result.group('posy')]
-            page = [None, None]
-        elif result.group('postype') == 'page':
-            page = [result.group('posx'), result.group('posy')]
-            loc = [result.group('locx'), result.group('locy')]
+        if result.group('postype') == 'page':
+            loc = result.group('locx')
+            page = result.group('posx')
+        else:
+            loc = result.group('posx')
+            page = None
         # extracting timestamp
         timestring = '{weekday} {month} {day} {hour}:{minute}:{second} {year}'
         timestring = timestring.format(weekday=result.group('wday'), \
