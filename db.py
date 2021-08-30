@@ -10,7 +10,7 @@ class Db:
         # Create tables if they do not exists
         self.cur.execute("""CREATE TABLE IF NOT EXISTS books (
         book_id INTEGER PRIMARY KEY,
-        name TEXT,
+        title TEXT,
         author TEXT);""")
         self.conn.commit()
 
