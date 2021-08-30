@@ -42,7 +42,7 @@ def parse(text):
             loc = result.group('posx')
             page = None
         # extracting timestamp
-        timestring = '{weekday} {month} {day} {hour}:{minute}:{second} {year}'
+        timestring = '{year}-{month}-{day} {hour}:{minute}:{second}'
         timestring = timestring.format(weekday=result.group('wday'), \
                                     month=result.group('month'), \
                                     day=result.group('day'), \
@@ -50,10 +50,13 @@ def parse(text):
                                     minute=result.group('min'), \
                                     second=result.group('sec'), \
                                     year=result.group('year'))
+        time_s = time.strptime(timestring, '%Y-%m-%d %H:%M:%S')
+        timestamp = time.strftime('%s', time_s)
+        # Convert timestring to unix millis
         clip['author'] = result.group('author')
         clip['title'] = result.group('title')
         clip['type'] = result.group('ctype').lower()
-        clip['timestamp'] = timestring
+        clip['timestamp'] = timestamp
         clip['highlight'] = result.group('highlight')
         clip['page'] = page
         clip['location'] = loc
