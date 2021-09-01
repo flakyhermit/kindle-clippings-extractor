@@ -54,7 +54,7 @@ class Db:
 
     def insert_clip(self, clip):
         """Insert a clip into database."""
-        self.cur.exeute("""INSERT into
+        self.cur.execute("""INSERT into
                            clippings(location, page, timestamp, highlight, note, book_id)
                            VALUES (?,?,?,?,?,?)""", clip)
         self.conn.commit()

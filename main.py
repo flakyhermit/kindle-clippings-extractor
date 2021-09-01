@@ -2,6 +2,7 @@
 
 import sys
 import re
+import time
 from db import Db
 
 FILEDIR = sys.arg[0]
