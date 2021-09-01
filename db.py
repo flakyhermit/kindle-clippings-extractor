@@ -55,21 +55,22 @@ class Db:
     def insert_clip(self, clip):
         """Insert a clip into database."""
         self.cur.execute("""INSERT into
-                           clippings(location, page, timestamp, highlight, note, book_id)
-                           VALUES (?,?,?,?,?,?)""", clip)
+                           clippings(location, page, type, timestamp, highlight, note, book_id)
+                           VALUES (?,?,?,?,?,?,?)""", clip)
         self.conn.commit()
 
     def insert_clips(self, clips):
         """Insert many clips"""
         self.cur.exeutemany("""INSERT into
-                           clippings(location, page, timestamp, highlight, note, book_id)
-                           VALUES (?,?,?,?,?,?)""", clips)
+                           clippings(location, page, type, timestamp, highlight, note, book_id)
+                           VALUES (?,?,?,?,?,?,?)""", clips)
         self.conn.commit()
 
     # Functions to print the database tables
     def print_clips(self):
         results = self.cur.execute("""SELECT * FROM clippings""").fetchall()
-        print(results)
+        for result in results:
+            print(result)
 
     def print_books(self):
         results = self.cur.execute("""SELECT * FROM books""").fetchall()

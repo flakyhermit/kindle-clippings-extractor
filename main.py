@@ -5,7 +5,6 @@ import re
 import time
 from db import Db
 
-FILEDIR = sys.arg[0]
 FILENAME = "My Clippings.txt"
 EXPORTPATH = './out'
 DBPATH = './clippings.db'
@@ -36,7 +35,6 @@ def parse(text):
     for result in results:
         clip = {}
         # getting position data
-        # TODO: A possible alternative to 'None'
         if result.group('postype') == 'page':
             loc = result.group('locx')
             page = result.group('posx')
@@ -44,9 +42,13 @@ def parse(text):
             loc = result.group('posx')
             page = None
         # extracting timestamp
+        def month_to_number (string):
+            month_list = ['Jan', 'Feb', 'Mar', 'Apr', 'May', \
+                          'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+            return month_list.index(string) + 1
         timestring = '{year}-{month}-{day} {hour}:{minute}:{second}'
         timestring = timestring.format(weekday=result.group('wday'), \
-                                    month=result.group('month'), \
+                                    month=month_to_number(result.group('month')), \
                                     day=result.group('day'), \
                                     hour=result.group('hr'), \
                                     minute=result.group('min'), \
@@ -65,11 +67,23 @@ def parse(text):
         clips.append(clip)
     return clips
 
+
 def db_update(clips):
     db = Db(DBPATH)
     for clip in clips:
-        if db.check_if_exists(clip) is False:
-            db.insert_clip(clip)
+        book_id = db.get_book_id(clip['title'], clip['author'])
+        if book_id is None:
+            book_id = db.insert_book(clip['title'], clip['author'])
+        clip_tuple = (
+            clip['location'],
+            clip['page'],
+            clip['type'],
+            clip['timestamp'],
+            clip['highlight'],
+            "",
+            str(book_id)
+        )
+        db.insert_clip(clip_tuple)
 
 # Main program
 # 1. Read source file.
@@ -79,3 +93,15 @@ def db_update(clips):
 # 5. Update database
 #   1. Check if table exists, create table
 #   2. Check if clip exists (How?)
+#   3. If not, check if book exists, if not, add, get the book id
+#   4. Add clip
+#   5. Close db.
+
+# Read the source file
+with open(FILENAME, 'r', encoding='utf-8') as file:
+    clips_str = file.read()
+
+if clips_str:
+    clips = parse(clips_str)
+    db_update(clips)
+
