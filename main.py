@@ -105,6 +105,7 @@ def db_update(clips):
             str(book_id)
         )
         db.insert_clip(clip_tuple)
+    db.close()
 
 # Main program
 # 1. Read source file.
