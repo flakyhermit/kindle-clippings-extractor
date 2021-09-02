@@ -61,7 +61,7 @@ class Db:
 
     def insert_clips(self, clips):
         """Insert many clips"""
-        self.cur.exeutemany("""INSERT into
+        self.cur.executemany("""INSERT into
                            clippings(location, page, type, timestamp, highlight, note, book_id)
                            VALUES (?,?,?,?,?,?,?)""", clips)
         self.conn.commit()
