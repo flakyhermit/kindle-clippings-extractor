@@ -2,6 +2,7 @@
 
 import argparse
 import re
+import sys
 import time
 
 from db import Db
@@ -119,9 +120,15 @@ parser.add_argument('filepath', nargs='?', default=FILEPATH,
                     help='Your `My Clippings.txt` file path')
 parser.add_argument('-d', '--database-file', dest='dbpath', default=DBPATH,
                     help='Specify a database file path')
+parser.add_argument('-p', '--print', action='store_true',
+                    help='Print clippings database')
 
 
 args = parser.parse_args()
+
+if args.print:
+    Db(args.dbpath).print_clips()
+    sys.exit()
 
 with open(args.filepath, 'r', encoding='utf-8') as file:
     clips_str = file.read()
