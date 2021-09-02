@@ -67,6 +67,27 @@ def parse(text):
         clips.append(clip)
     return clips
 
+def check_duplicate(prev_clip, cur_clip):
+    """Check if the two strings are duplicates. Returns the longer string."""
+   if len(prev_clip) > len(cur_clip):
+      if cur_clip in prev_clip:
+         return prev_clip
+   if prev_clip in cur_clip:
+      return cur_clip
+   return False
+
+def remove_duplicates(clips):
+    """Returns a new clips array with no duplicates"""
+    new_clips = []
+    new_clips.append(clips[0])
+   for i, clip in enumerate(clips):
+       clip_text = check_duplicate(new_clips[-1]['highlight'], clip['highlight'])
+       # print(new_clips)
+      if clip_text:
+          new_clips[-1] = clip
+      else:
+          new_clips.append(clip) # Replace the previous duplicat clip
+   return new_clips
 
 def db_update(clips):
     db = Db(DBPATH)
