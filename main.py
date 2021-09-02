@@ -9,15 +9,6 @@ FILENAME = "My Clippings.txt"
 EXPORTPATH = './out'
 DBPATH = './clippings.db'
 
-def read_source_file(filepath):
-    """Read the clippings file and return as string."""
-    try:
-        file = open(filepath, 'r', encoding = 'utf-8')
-    except FileNotFoundError:
-        return None
-    clips_str = file.read()
-    return clips_str
-
 def parse(text):
     """Use regex to extract info from clippings text."""
     p = re.compile(r"^(?P<title>[\S ]+) \((?P<author>[\S ]+)\)\n" \
