@@ -125,5 +125,8 @@ with open(FILENAME, 'r', encoding='utf-8') as file:
 
 if clips_str:
     clips = parse(clips_str)
+    print("%d clips read from the file." % len(clips))
+    clips = remove_duplicates(clips)
+    print("%d clips after removing duplicates." % len(clips))
     db_update(clips)
 
