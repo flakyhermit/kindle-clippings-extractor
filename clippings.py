@@ -128,14 +128,14 @@ args = parser.parse_args()
 
 if args.print:
     Db(args.dbpath).print_clips()
-    sys.exit()
 
-with open(args.filepath, 'r', encoding='utf-8') as file:
-    clips_str = file.read()
+else:
+    with open(args.filepath, 'r', encoding='utf-8') as file:
+        clips_str = file.read()
 
-if clips_str:
-    clips = parse(clips_str)
-    print("%d clips read from the file." % len(clips))
-    clips = remove_duplicates(clips)
-    print("%d clips after removing duplicates." % len(clips))
-    db_update(clips)
+    if clips_str:
+        clips = parse(clips_str)
+        print("%d clips read from the file." % len(clips))
+        clips = remove_duplicates(clips)
+        print("%d clips after removing duplicates." % len(clips))
+        db_update(clips)
