@@ -1,12 +1,10 @@
 #!/usr/bin/env python3
 
+import argparse
 import re
 import time
-from db import Db
 
-FILENAME = "My Clippings.txt"
-EXPORTPATH = './out'
-DBPATH = './clippings.db'
+from db import Db
 
 def parse(text):
     """Use regex to extract info from clippings text."""
@@ -59,33 +57,34 @@ def parse(text):
 
 def check_duplicate(prev_clip, cur_clip):
     """Check if the two strings are duplicates. Returns the longer string."""
-   if len(prev_clip) > len(cur_clip):
-      if cur_clip in prev_clip:
-         return prev_clip
-   if prev_clip in cur_clip:
-      return cur_clip
-   return False
+    if len(prev_clip) > len(cur_clip):
+        if cur_clip in prev_clip:
+            return prev_clip
+        if prev_clip in cur_clip:
+            return cur_clip
+    return False
 
 def remove_duplicates(clips):
     """Returns a new clips array with no duplicates"""
     new_clips = []
     new_clips.append(clips[0])
-   for i, clip in enumerate(clips):
-       clip_text = check_duplicate(new_clips[-1]['highlight'], clip['highlight'])
-       # print(new_clips)
-      if clip_text:
-          new_clips[-1] = clip
-      else:
-          new_clips.append(clip) # Replace the previous duplicat clip
-   return new_clips
+    for i, clip in enumerate(clips):
+        clip_text = check_duplicate(new_clips[-1]['highlight'], clip['highlight'])
+        # print(new_clips)
+        if clip_text:
+            new_clips[-1] = clip
+        else:
+            new_clips.append(clip) # Replace the previous duplicate clip
+    return new_clips
 
 def db_update(clips):
-    db = Db(DBPATH)
+    db = Db(args.dbpath)
+    clip_tuples = []
     for clip in clips:
         book_id = db.get_book_id(clip['title'], clip['author'])
         if book_id is None:
             book_id = db.insert_book(clip['title'], clip['author'])
-        clip_tuple = (
+        clip_tuples.append((
             clip['location'],
             clip['page'],
             clip['type'],
@@ -93,8 +92,8 @@ def db_update(clips):
             clip['highlight'],
             "",
             str(book_id)
-        )
-        db.insert_clip(clip_tuple)
+        ))
+    db.insert_clips(clip_tuples)
     db.close()
 
 # Main program
@@ -104,13 +103,27 @@ def db_update(clips):
 # 4. Parse text, return clips object.
 # 5. Update database
 #   1. Check if table exists, create table
-#   2. Check if clip exists (How?)
+#   X. Check if clip exists (How?)
 #   3. If not, check if book exists, if not, add, get the book id
 #   4. Add clip
 #   5. Close db.
 
 # Read the source file
-with open(FILENAME, 'r', encoding='utf-8') as file:
+#
+FILEPATH = 'My Clippings.txt'
+DBPATH = './clippings.db'
+
+parser = argparse.ArgumentParser(description='Parse a Kindle clippings file'\
+                                 'and generate an SQL database of your notes and highlights.')
+parser.add_argument('filepath', nargs='?', default=FILEPATH,
+                    help='Your `My Clippings.txt` file path')
+parser.add_argument('-d', '--database-file', dest='dbpath', default=DBPATH,
+                    help='Specify a database file path')
+
+
+args = parser.parse_args()
+
+with open(args.filepath, 'r', encoding='utf-8') as file:
     clips_str = file.read()
 
 if clips_str:
@@ -119,4 +132,3 @@ if clips_str:
     clips = remove_duplicates(clips)
     print("%d clips after removing duplicates." % len(clips))
     db_update(clips)
-
