@@ -46,7 +46,7 @@ def parse(text):
         time_s = time.strptime(timestring, '%Y-%m-%d %H:%M:%S')
         timestamp = time.strftime('%s', time_s)
         # Convert timestring to unix millis
-        clip['author'] = result.group('author')
+        clip['author'] = ', '.join(result.group('author').split(';'))
         clip['title'] = result.group('title')
         clip['type'] = result.group('ctype').lower()
         clip['timestamp'] = timestamp
