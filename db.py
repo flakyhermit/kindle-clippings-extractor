@@ -23,14 +23,14 @@ class Db:
         highlight TEXT,
         note TEXT,
         book_id INTEGER,
-        FOREIGN KEY (book_id) REFERENCES books (book_id));""")
+        FOREIGN KEY (book_id) REFERENCES books (id));""")
         self.conn.commit()
 
     def close(self):
         self.conn.close()
 
     def get_book_id (self, title, author):
-        self.cur.execute("""SELECT book_id, author, title
+        self.cur.execute("""SELECT id, author, title
                             FROM books
                             WHERE title=? AND author=?""",
                          (title, author))
@@ -42,7 +42,7 @@ class Db:
         return _id
 
     def insert_book(self, title, author):
-        self.cur.execute("""SELECT book_id, author, title
+        self.cur.execute("""SELECT id, author, title
                             FROM books
                             WHERE title=? AND author=?""",
                          (title, author))
@@ -52,7 +52,7 @@ class Db:
         self.cur.execute("""INSERT INTO books (title, author)
                             VALUES (?, ?)""", (title, author))
         self.conn.commit()
-        result = self.cur.execute("""SELECT book_id FROM books WHERE title=? AND author=?""",
+        result = self.cur.execute("""SELECT id FROM books WHERE title=? AND author=?""",
                                   (title, author)).fetchone()
         if result is not None:
             _id = result[0]
