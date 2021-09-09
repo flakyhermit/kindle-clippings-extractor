@@ -34,7 +34,11 @@ class Db:
                             FROM books
                             WHERE title=? AND author=?""",
                          (title, author))
-        _id = self.cur.fetchone()
+        result = self.cur.fetchone()
+        if result is not None:
+            _id = result[0]
+        else:
+            _id = None
         return _id
 
     def insert_book(self, title, author):
@@ -48,8 +52,12 @@ class Db:
         self.cur.execute("""INSERT INTO books (title, author)
                             VALUES (?, ?)""", (title, author))
         self.conn.commit()
-        _id = self.cur.execute("""SELECT book_id FROM books WHERE title=? AND author=?""",
+        result = self.cur.execute("""SELECT book_id FROM books WHERE title=? AND author=?""",
                                   (title, author)).fetchone()
+        if result is not None:
+            _id = result[0]
+        else:
+            _id = None
         return _id
 
     def insert_clip(self, clip):
