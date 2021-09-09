@@ -115,7 +115,7 @@ FILEPATH = 'My Clippings.txt'
 DBPATH = './clippings.db'
 
 parser = argparse.ArgumentParser(description='Parse a Kindle clippings file'\
-                                 'and generate an SQL database of your notes and highlights.')
+                                 ' and generate an SQLite database of your notes and highlights.')
 parser.add_argument('filepath', nargs='?', default=FILEPATH,
                     help='Your `My Clippings.txt` file path')
 parser.add_argument('-d', '--database-file', dest='dbpath', default=DBPATH,
